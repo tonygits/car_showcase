@@ -3,9 +3,7 @@ import {fetchCars, generateRandom} from "@/utils";
 import {fuels, yearsOfProduction} from "@/constants";
 import {FilterProps} from "@/types";
 
-type Params = Promise<FilterProps>
-
-export default async function Home(HomeProps: {searchParams: Params}) {
+export default async function Home(HomeProps: {searchParams: Promise<FilterProps>}) {
     const params = await HomeProps.searchParams;
     const carListRes = await fetchCars({
         manufacturer: params.manufacturer || 'toyota',
