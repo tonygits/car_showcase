@@ -1,16 +1,18 @@
 import {CarCard, CustomFilter, Hero, SearchBar, ShowMore} from "@/components";
 import {fetchCars, generateRandom} from "@/utils";
-import {HomeProps} from "@/types";
 import {fuels, yearsOfProduction} from "@/constants";
+import {FilterProps} from "@/types";
 
-export default async function Home({searchParams}: HomeProps) {
+type Params = Promise<FilterProps>
+
+export default async function Home(HomeProps: {searchParams: Params}) {
+    const params = await HomeProps.searchParams;
     const carListRes = await fetchCars({
-
-        manufacturer: searchParams.manufacturer || 'toyota',
-        model: searchParams.model || 'corolla',
-        year: searchParams.year || 2020,
-        fuel: searchParams.fuel || '',
-        limit: searchParams.limit || 10,
+        manufacturer: params.manufacturer || 'toyota',
+        model: params.model || 'corolla',
+        year: params.year || 2020,
+        fuel: params.fuel || '',
+        limit: params.limit || 10,
     });
     const isDataEmpty = !Array.isArray(carListRes) || carListRes.length < 1 || !carListRes;
     return (
@@ -36,7 +38,7 @@ export default async function Home({searchParams}: HomeProps) {
                                          key={`${car.make}-${car.model}-${generateRandom(5)}`}/>
                             ))}
                         </div>
-                        <ShowMore pageNumber={(searchParams.limit || 10)/10}  isNext={(searchParams.limit || 10) > carListRes.length }/>
+                        <ShowMore pageNumber={(params.limit || 10)/10}  isNext={(params.limit || 10) > carListRes.length }/>
                     </section>
                 ) : (
                     <div className={'home__error-container'}>
